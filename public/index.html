@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>放映室 · TVBox 播放器</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/hls.js"></script>
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span>放映室</div>
+    <form id="search-form" role="search" aria-label="全片源搜索" class="search">
+      <label class="sr-only" for="search">搜索</label>
+      <label class="search-mark" for="search" aria-hidden="true"></label>
+      <input id="search" type="search" placeholder="搜索全部片源" autocomplete="off" maxlength="100" enterkeyhint="search" aria-describedby="search-feedback">
+      <button type="submit" id="search-button" aria-label="搜索"><span class="search-label">搜索</span><span class="search-mark" aria-hidden="true"></span></button>
+      <span id="search-feedback" class="search-feedback" role="status" hidden></span>
+    </form>
+    <button id="open-config" class="outline" type="button">订阅设置</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="片源导航">
+      <nav aria-label="播放类型" class="navigation">
+        <button type="button" data-mode="live" aria-pressed="false"><span class="nav-icon live-icon" aria-hidden="true"></span>直播</button>
+        <button type="button" data-mode="vod" aria-pressed="true"><span class="nav-icon film-icon" aria-hidden="true"></span>点播</button>
+      </nav>
+      <div class="source-section">
+        <h2 id="source-label">点播片源</h2>
+        <input id="source-filter" type="search" placeholder="筛选片源" aria-label="筛选片源" hidden>
+        <div id="sources" class="sources" aria-labelledby="source-label"></div>
+      </div>
+      <button id="source-status" class="source-status" type="button" hidden></button>
+    </aside>
+
+    <main>
+      <section class="hero" aria-labelledby="heading">
+        <div class="hero-art" aria-hidden="true"><div></div><div></div><div></div></div>
+        <div class="hero-text">
+          <div id="hero-source" class="hero-source" hidden></div>
+          <h1 id="heading">点播片库</h1>
+          <p id="hero-summary" aria-live="polite">正在连接订阅…</p>
+          <a id="quark-login-link" class="outline account-link" href="/quark-login" target="_blank" rel="noopener" hidden>夸克扫码登录</a>
+        </div>
+      </section>
+      <section class="library" aria-labelledby="library-heading" aria-busy="true">
+        <div class="library-heading">
+          <h2 id="library-heading">全部影片</h2>
+          <div class="library-actions">
+            <span id="result-count"></span>
+            <button id="stop-search" type="button" class="outline" hidden>停止搜索</button>
+          </div>
+        </div>
+        <form id="source-search-form" role="search" aria-label="片源内搜索" class="search source-search" hidden>
+          <label class="sr-only" for="source-search">片源内搜索</label>
+          <input id="source-search" type="search" placeholder="搜此片源" autocomplete="off" maxlength="100" enterkeyhint="search">
+          <button type="submit" aria-label="搜此片源"><span class="search-label">搜此片源</span><span class="search-mark" aria-hidden="true"></span></button>
+        </form>
+        <div id="categories" class="chips" aria-label="分类" hidden></div>
+        <div id="library-message" role="status" class="library-message">正在加载…</div>
+        <div id="items" class="grid"></div>
+        <div id="pagination" class="pagination" hidden>
+          <button id="previous-page" class="outline" type="button">上一页</button>
+          <span id="page-number"></span>
+          <button id="next-page" class="outline" type="button">下一页</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="config-dialog" class="config-dialog">
+    <div class="dialog-heading"><h2>订阅设置</h2><button class="close" type="button" data-close="config-dialog" aria-label="关闭订阅设置">×</button></div>
+    <form id="config-form">
+      <label for="config-url">TVBox 配置地址</label>
+      <div class="config-row">
+        <input id="config-url" type="text" inputmode="url" required spellcheck="false" placeholder="https://…">
+        <button id="load-config" class="primary" type="submit">加载</button>
+      </div>
+      <p id="config-feedback" class="feedback" role="status"></p>
+    </form>
+    <details id="compatibility" hidden>
+      <summary id="compatibility-summary"></summary>
+      <ul id="compatibility-list"></ul>
+    </details>
+  </dialog>
+
+  <dialog id="account-dialog" class="config-dialog" aria-labelledby="account-title">
+    <div class="dialog-heading"><h2 id="account-title">扫码配置</h2><button class="close" type="button" data-close="account-dialog" aria-label="关闭扫码配置">×</button></div>
+    <p id="account-feedback" class="feedback" role="status"></p>
+    <a id="account-link" class="primary account-link" target="_blank" rel="noopener noreferrer" hidden>打开配置页</a>
+    <button id="account-retry" class="outline" type="button" hidden>重试</button>
+  </dialog>
+
+  <dialog id="player-dialog" class="player-dialog">
+    <div class="dialog-heading"><div><h2 id="player-title">播放器</h2><p id="player-subtitle" hidden></p></div><button class="close" type="button" data-close="player-dialog" aria-label="关闭播放器">×</button></div>
+    <div id="screen" class="screen" hidden><video id="video" controls playsinline preload="metadata"></video></div>
+    <div id="player-feedback" class="feedback" role="status"></div>
+    <div id="lines" class="chips" aria-label="播放线路" hidden></div>
+    <div id="episodes" class="chips" aria-label="选集" hidden></div>
+    <p id="player-description" class="description" hidden></p>
+  </dialog>
+</body>
+</html>

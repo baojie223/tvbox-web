@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>夸克扫码登录 · 放映室</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/quark-login.js"></script>
+</head>
+<body>
+  <main class="quark-auth">
+    <h1>夸克扫码登录</h1>
+    <p id="quark-status" class="feedback" role="status">正在连接夸克…</p>
+    <img id="quark-qr" width="240" height="240" alt="夸克登录二维码" hidden>
+    <div class="library-actions">
+      <button id="quark-refresh" type="button" class="outline" hidden>重新生成二维码</button>
+      <button id="quark-logout" type="button" class="outline" hidden>退出本机登录</button>
+      <a class="outline account-link" href="/">返回放映室</a>
+    </div>
+  </main>
+</body>
+</html>
